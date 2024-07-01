@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\SessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,8 +15,12 @@ use App\Http\Controllers\ProdukController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [ProdukController::class, 'index']);
 
-Route::get('produk', [ProdukController::class, 'index']);
+Route::resource('produk', ProdukController::class)->middleware('isLogin');
+
+Route::get('sesi', [SessionController::class, 'index'])->middleware('isAlreadyLogin');
+Route::post('sesi/login', [SessionController::class, 'loginAction'])->middleware('isAlreadyLogin');
+Route::get('sesi/logout', [SessionController::class, 'logoutAction']);
+Route::get('sesi/registrasiform', [SessionController::class, 'registerForm'])->middleware('isAlreadyLogin');
+Route::post('sesi/registation', [SessionController::class, 'registData'])->middleware('isAlreadyLogin');
